@@ -1,0 +1,41 @@
+{
+  "name": "mobile",
+  "version": "6.1.0",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "run:android": "react-native run-android",
+    "run:ios": "react-native run-ios --simulator=\"iPhone X\"",
+    "build:apk": "cd android && ./gradlew assembleRelease",
+    "test": "jest",
+    "prepare": "patch-package"
+  },
+  "dependencies": {
+    "@react-native-firebase/app": "6.1.0",
+    "@react-native-firebase/firestore": "6.1.0",
+    "@react-native-firebase/messaging": "6.1.0",
+    "material-bread": "^0.2.5",
+    "react": "16.9.0",
+    "react-native": "0.61.5",
+    "react-native-default-preference": "^1.4.1",
+    "react-native-notifications": "^2.1.6",
+    "react-native-svg": "^9.13.5",
+    "react-native-vector-icons": "^6.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "@react-native-community/cli": "^2.9.0",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.5.1",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.56.0",
+    "patch-package": "^6.1.4",
+    "prettier": "1.19.1",
+    "react-test-renderer": "16.9.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
