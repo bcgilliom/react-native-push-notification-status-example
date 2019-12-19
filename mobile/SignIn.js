@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react'; // eslint-disable-line no-unused-vars
-import {StyleSheet, Text, View} from 'react-native';
-import {Button, Paper} from 'material-bread';
+import React, { PureComponent } from 'react';
+import { StyleSheet } from 'react-native';
+import { Button, Paper } from 'material-bread';
 
 import Input from './Input';
 
@@ -28,7 +28,7 @@ type Props = {
 
 type State = {
   userId: string,
-}
+};
 
 class SignIn extends PureComponent<Props, State> {
   state = {

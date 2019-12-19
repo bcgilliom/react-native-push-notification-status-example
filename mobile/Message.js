@@ -1,6 +1,8 @@
-import React, { PureComponent } from 'react'; // eslint-disable-line no-unused-vars
+import React, { PureComponent } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { Card, CardContent } from 'material-bread';
+
+import type NotificationType from './types/NotificationType';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,7 +30,11 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {};
+type Props = {
+  notification: NotificationType,
+  onPress: NotificationType => void,
+};
+
 class Message extends PureComponent<Props> {
   onPress = () => {
     const { onPress, notification } = this.props;

@@ -1,11 +1,3 @@
-/**
- * Sample React Native App with Firebase
- * https://github.com/invertase/react-native-firebase
- *
- * @format
- * @flow
- */
-
 import React, { PureComponent } from 'react';
 import {
   Platform,
@@ -43,6 +35,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 80,
     paddingBottom: 60,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   header: {
     fontSize: 20,
@@ -243,7 +239,7 @@ export default class App extends PureComponent<Props, State> {
           contentContainerStyle={styles.contentContainer}
           keyboardShouldPersistTaps={'handled'}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={styles.headerContainer}>
             <Icon
               size={48}
               name="radio-handheld"

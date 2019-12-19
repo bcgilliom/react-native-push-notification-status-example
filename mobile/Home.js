@@ -7,6 +7,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Message from './Message';
 import Input from './Input';
 
+import type NotificationType from './types/NotificationType';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -40,15 +42,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
-
-type NotificationType = {
-  id: string,
-  senderId: string,
-  recipientId: string,
-  message: string,
-  createdAt: string,
-  status: string,
-};
 
 type Props = {
   userId: string,

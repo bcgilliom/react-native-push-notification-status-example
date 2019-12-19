@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-  TextField,
-} from 'material-bread';
+import { TextField } from 'material-bread';
 
 const textFieldProps = {
   labelColor: '#DBDBDB',
@@ -23,7 +21,13 @@ class Input extends PureComponent {
   };
 
   render() {
-    return <TextField {...textFieldProps} onChangeText={this.onValueChanged} {...this.props} />;
+    return (
+      <TextField
+        {...textFieldProps}
+        onChangeText={this.onValueChanged}
+        {...this.props}
+      />
+    );
   }
 }
 
