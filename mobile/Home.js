@@ -131,7 +131,7 @@ class Home extends PureComponent<Props, State> {
   };
 
   render() {
-    const { userId, loading, onSignOut } = this.props;
+    const { userId, loading, onSignOut, onPressNotification } = this.props;
     const { values, notifications } = this.state;
     return (
       <View style={styles.container}>
@@ -184,7 +184,7 @@ class Home extends PureComponent<Props, State> {
             <Text style={styles.title}>Chatter</Text>
           </View>
           {notifications.map(n => (
-            <Message key={n.id} notification={n} />
+            <Message key={n.id} notification={n} onPress={onPressNotification} />
           ))}
         </View>
       </View>

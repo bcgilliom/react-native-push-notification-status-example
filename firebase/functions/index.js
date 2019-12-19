@@ -39,7 +39,6 @@ exports.onNotificationCreated = functions.firestore
   .onCreate((snapshot, context) => {
     const notification = snapshot.data();
     const id = notification.recipientId;
-    const {notificationId} = context.params;
 
     console.log("Sending Notification to User", id);
 
@@ -51,12 +50,16 @@ exports.onNotificationCreated = functions.firestore
       .get()
       .then(doc => (doc.exists ? doc.data() : null))
       .then(user => {
-        if (user && user.tokens.length > 0) {
+        if (user && user.token) {
+          // this option is required for iOS to handle the notification with the service extension
           const options = {
             mutableContent: true
           };
 
-          const payload = {
+          // ios needs the title body in the notification field
+          // android needs everything in the data field in order to
+          // handle the notification in the background
+          const payload = user.type === 'ios' ? {
             notification: {
               title: `Hello ${id}`,
               body: notification.message
@@ -64,9 +67,16 @@ exports.onNotificationCreated = functions.firestore
             data: {
               notificationId: context.params.notificationId,
             },
+          } : {
+            data: {
+              title: `Hello ${id}`,
+              body: notification.message,
+              notificationId: context.params.notificationId,
+            }
           };
+
           console.log('Sending notification with payload', payload);
-          return admin.messaging().sendToDevice(user.tokens, payload, options);
+          return admin.messaging().sendToDevice(user.token, payload, options);
         } else {
           throw new Error("No recipients found");
         }

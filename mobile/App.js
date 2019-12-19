@@ -22,6 +22,7 @@ import messaging from '@react-native-firebase/messaging';
 import DefaultPreference from 'react-native-default-preference';
 import Notifications, {
   NotificationsAndroid,
+  PendingNotifications,
 } from 'react-native-notifications';
 import { BreadProvider, Icon } from 'material-bread';
 
@@ -91,11 +92,18 @@ export default class App extends PureComponent<Props, State> {
         'notificationReceivedForeground',
         this.onNotificationReceivedForeground,
       );
+      Notifications.addEventListener(
+        'notificationOpened',
+        this.onOpenedNotification,
+      );
 
       Notifications.requestPermissions();
     } else {
       NotificationsAndroid.setRegistrationTokenUpdateListener(
         this.onPushRegistered,
+      );
+      NotificationsAndroid.setNotificationOpenedListener(
+        this.onOpenedNotification,
       );
     }
 
@@ -104,6 +112,19 @@ export default class App extends PureComponent<Props, State> {
       token: null,
       tokenError: null,
     };
+  }
+
+  async componentDidMount() {
+    if (!isIOS) {
+      try {
+        const notification = await PendingNotifications.getInitialNotification();
+        if (notification) {
+          this.onOpenedNotification(notification);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -120,6 +141,10 @@ export default class App extends PureComponent<Props, State> {
         'notificationReceivedForeground',
         this.onNotificationReceivedForeground,
       );
+      Notifications.removeEventListener(
+        'notificationOpened',
+        this.onOpenedNotification,
+      );
     }
   }
 
@@ -135,11 +160,17 @@ export default class App extends PureComponent<Props, State> {
   async setUserInfo(userId, token) {
     this.setState({ loading: true });
     try {
+      // add this token to the users's device list
       await firestore()
         .doc(`users/${userId}`)
         .set({
-          tokens: firestore.FieldValue.arrayUnion(token),
+          token,
+          type: Platform.OS,
         });
+
+      // update any user specific info here
+      // In this example we are only sending PNs to
+      // one user at a time, so userId isn't actually used
       await DefaultPreference.setName('group.fsl.pnstatus');
       await DefaultPreference.setMultiple({
         endpoint: statusEndpoint,
@@ -152,6 +183,8 @@ export default class App extends PureComponent<Props, State> {
   }
 
   async initNotifications() {
+    // these rn-firebase functions only work if the user has already
+    // given permission via rn-notifications
     const isRegistered = firebase.messaging()
       .isRegisteredForRemoteNotifications;
     try {
@@ -165,6 +198,16 @@ export default class App extends PureComponent<Props, State> {
     }
   }
 
+  markNotificationRead = async ({ id }) => {
+    const url = `${statusEndpoint}/${id}?status=READ`;
+    console.log('posting: ', url);
+    try {
+      await fetch(url, { method: 'POST' });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   onPushRegistered = async () => {
     this.initNotifications();
   };
@@ -173,6 +216,13 @@ export default class App extends PureComponent<Props, State> {
 
   onNotificationReceivedForeground = (notification, completion) => {
     completion({ alert: true });
+  };
+
+  onOpenedNotification = notification => {
+    const data = notification.getData();
+    if (data && data.notificationId) {
+      this.markNotificationRead({ id: data.notificationId });
+    }
   };
 
   onSignIn = userId => {
@@ -207,6 +257,7 @@ export default class App extends PureComponent<Props, State> {
               onSignOut={this.onSignOut}
               userId={userId}
               loading={loading}
+              onPressNotification={this.markNotificationRead}
             />
           ) : (
             <SignIn onSignIn={this.onSignIn} loading={loading} />

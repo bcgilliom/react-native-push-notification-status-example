@@ -30,10 +30,17 @@ const styles = StyleSheet.create({
 
 type Props = {};
 class Message extends PureComponent<Props> {
+  onPress = () => {
+    const { onPress, notification } = this.props;
+    if (onPress) {
+      onPress(notification);
+    }
+  };
+
   render() {
     const { notification: n } = this.props;
     return (
-      <Card key={n.id} style={styles.container}>
+      <Card key={n.id} style={styles.container} onPress={this.onPress}>
         <CardContent style={styles.content}>
           <Text style={styles.messageText}>
             <Text style={styles.senderText}>{n.senderId}</Text>
