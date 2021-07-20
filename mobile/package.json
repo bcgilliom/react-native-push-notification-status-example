@@ -16,7 +16,7 @@
     "@react-native-firebase/messaging": "6.1.0",
     "material-bread": "^0.2.5",
     "react": "16.9.0",
-    "react-native": "0.61.5",
+    "react-native": "0.62.3",
     "react-native-default-preference": "^1.4.1",
     "react-native-notifications": "^2.1.6",
     "react-native-svg": "^9.13.5",
